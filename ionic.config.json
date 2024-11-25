@@ -1,0 +1,7 @@
+{
+  "name": "dnd-fichas",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
