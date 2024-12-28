@@ -1,0 +1,439 @@
+<ion-tabs>
+  <!-- Tab Bar -->
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="characteristics">
+      <ion-icon name="person-outline"></ion-icon>
+      <!-- Características -->
+    </ion-tab-button>
+    <ion-tab-button tab="skills">
+      <ion-icon name="school-outline"></ion-icon>
+      <!-- Habilidades -->
+    </ion-tab-button>
+    <ion-tab-button tab="equipment">
+      <ion-icon name="briefcase-outline"></ion-icon>
+      <!-- Equipo -->
+    </ion-tab-button>
+    <ion-tab-button tab="spells">
+      <ion-icon name="sparkles-outline"></ion-icon>
+      <!-- Hechizos -->
+    </ion-tab-button>
+    <ion-tab-button (click)="saveCharacter()">
+      <ion-icon name="save-outline"></ion-icon>
+      <!-- Guardar -->
+    </ion-tab-button>
+  </ion-tab-bar>
+
+
+
+  <!-- Pestaña: Características -->
+  <ion-tab tab="characteristics">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Características</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+
+    <ion-content>
+      <!-- Información Básica -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-item lines="none">
+              <ion-label position="stacked">Nombre</ion-label>
+              <ion-input [(ngModel)]="character.name" name="name" required></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item lines="none">
+              <ion-label position="stacked">Nivel</ion-label>
+              <ion-input type="number" [(ngModel)]="character.level" name="level" required
+                (ionChange)="updateProficiencyBonus()"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item lines="none">
+              <ion-label position="stacked">Clase</ion-label>
+              <ion-input [(ngModel)]="character.class" name="class" required></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item lines="none">
+              <ion-label position="stacked">Arquetipo</ion-label>
+              <ion-input [(ngModel)]="character.archetype" name="archetype" required></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <!-- Características Principales -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4" *ngFor="let attr of attributes">
+            <div class="attribute-box">
+              <!-- Título del Atributo -->
+              <div class="attribute-title">{{ attr.label }}</div>
+
+              <!-- Contenedor para Valor y Modificador -->
+              <div class="attribute-value-modifier">
+                <!-- Input del valor del atributo -->
+                <ion-input type="number" [(ngModel)]="character.attributes[attr.key]"
+                  (ionChange)="validateAttribute(attr.key)" required class="attribute-value"></ion-input>
+
+                <!-- Modificador calculado -->
+                <span class="attribute-modifier">
+                  / {{ modifiers[attr.key] >= 0 ? '+' : '' }}{{ modifiers[attr.key] }}
+                </span>
+              </div>
+
+
+              <!-- Checkbox para salvación -->
+              <ion-checkbox [(ngModel)]="character.savingThrows[attr.key]" (ionChange)="updateSavingThrow(attr.key)"
+                slot="end"></ion-checkbox>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+
+      <!-- Estadísticas Secundarias -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="3">
+            <div class="attribute-box">
+              <div class="attribute-title">HP</div>
+              <ion-input type="number" [(ngModel)]="character.secondaryStats.maxHP" required
+                class="attribute-value"></ion-input>
+            </div>
+          </ion-col>
+          <ion-col size="3">
+            <div class="attribute-box">
+              <div class="attribute-title">CA</div>
+              <ion-input type="number" [(ngModel)]="character.secondaryStats.armorClass" required
+                class="attribute-value"></ion-input>
+            </div>
+          </ion-col>
+          <ion-col size="3">
+            <div class="attribute-box">
+              <div class="attribute-title">Init</div>
+              <div class="attribute-modifier">
+                <ion-input type="number" [(ngModel)]="character.secondaryStats.initiative" required
+                  class="attribute-value"></ion-input>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col size="3">
+            <div class="attribute-box">
+              <div class="attribute-title">Speed</div>
+              <ion-input type="number" [(ngModel)]="character.secondaryStats.speed" required
+                class="attribute-value"></ion-input>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </ion-tab>
+
+  <ion-tab tab="skills">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Habilidades</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-grid>
+        <ion-row>
+          <ng-container *ngFor="let attribute of attributes">
+            <ion-col size="12" *ngIf="getSkillsByAttribute(attribute.key).length > 0">
+              <!-- Card para cada grupo de habilidades basado en atributo -->
+              <ion-card>
+                <ion-card-header (click)="toggleAccordion(attribute.key)">
+                  <ion-toolbar>
+                    <ion-title>{{ attribute.label }}</ion-title>
+                    <ion-buttons slot="end">
+                      <ion-icon [name]="expanded[attribute.key] ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+                    </ion-buttons>
+                  </ion-toolbar>
+                </ion-card-header>
+
+                <!-- Lista de habilidades si el acordeón está expandido -->
+                <ion-card-content class="skillsContainer" *ngIf="expanded[attribute.key]">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="6" *ngFor="let skill of getSkillsByAttribute(attribute.key)">
+                        <div class="skill-box">
+                          <div class="skill-name">{{ skill.name }}</div>
+                          <div class="skill-modifier">
+                            {{ calculateSkillModifier(skill.key) >= 0 ? '+' : '' }}
+                            {{ calculateSkillModifier(skill.key) }}
+                          </div>
+                          <ion-checkbox [(ngModel)]="character.skills[skill.key]" class="skill-checkbox"></ion-checkbox>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ng-container>
+
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </ion-tab>
+
+  <ion-tab tab="equipment">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Equipamiento</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Agregar Objeto</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item lines="none" class="grayItems">
+            <ion-label position="stacked">Tipo de Objeto</ion-label>
+            <ion-select [(ngModel)]="newItem.type" placeholder="Selecciona">
+              <ion-select-option value="arma">Arma</ion-select-option>
+              <ion-select-option value="pocion">Poción</ion-select-option>
+              <ion-select-option value="otro">Otro</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="none" class="grayItems">
+            <ion-label position="stacked">Nombre del Objeto</ion-label>
+            <ion-input [(ngModel)]="newItem.name" placeholder="Introduce el nombre"></ion-input>
+          </ion-item>
+
+          <ion-item lines="none" class="grayItems" *ngIf="newItem.type === 'arma'">
+            <ion-label position="stacked">Dados de Daño</ion-label>
+            <ion-input [(ngModel)]="newItem.damage" placeholder="Ejemplo: 1d8 + 2d6"></ion-input>
+          </ion-item>
+
+          <ion-item lines="none" class="grayItems" *ngIf="newItem.type === 'arma'">
+            <ion-label position="stacked">Característica</ion-label>
+            <ion-select [(ngModel)]="newItem.attribute" placeholder="Selecciona">
+              <ion-select-option *ngFor="let attr of attributes" [value]="attr.key">
+                {{ attr.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="none" class="grayItems" *ngIf="newItem.type === 'pocion' || newItem.type === 'otro'">
+            <ion-label position="stacked">Descripción</ion-label>
+            <ion-textarea [(ngModel)]="newItem.description" placeholder="Describe el objeto"></ion-textarea>
+          </ion-item>
+
+          <button class="md-save-button" (click)="addItem()">
+            Guardar
+          </button>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Lista de Objetos</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item lines="none" class="grayItems" *ngFor="let item of character.equipment.items; let i = index">
+              <ion-label>
+                <h2>{{ item.name }}</h2>
+                <p *ngIf="item.type === 'arma'">
+                  Daño: {{ item.damage }} |
+                  Bonificador: {{ modifiers[item.attribute] >= 0 ? '+' : '' }}
+                  {{ calculateModifier(character.attributes[item.attribute]) }}
+                </p>
+                <p *ngIf="item.type === 'pocion' || item.type === 'otro'">
+                  {{ item.description }}
+                </p>
+              </ion-label>
+              <ion-button fill="none" (click)="removeItem(i)"><ion-icon slot="end" name="trash"></ion-icon></ion-button>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </ion-content>
+  </ion-tab>
+
+
+  <ion-tab tab="spells">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Hechizos</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-modal [isOpen]="isSpellModalOpen" (ionModalWillDismiss)="closeSpellModal()">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Seleccionar Hechizo</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="closeSpellModal()">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content>
+          <!-- Filtros de Hechizos -->
+          <ion-item class="grayItems" lines="none">
+            <ion-searchbar placeholder="Busca un hechizo" [(ngModel)]="searchTerm"
+              (ionInput)="filterSpells()"></ion-searchbar>
+          </ion-item>
+
+          <ion-item class="grayItems" lines="none">
+            <ion-label>Nivel</ion-label>
+            <ion-select [(ngModel)]="selectedLevel" (ionChange)="filterSpells()">
+              <ion-select-option *ngFor="let level of spellLevels" [value]="level">
+                Nivel {{ level }}
+              </ion-select-option>
+              <ion-select-option value="">Todos</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item class="grayItems" lines="none">
+            <ion-label>Clase</ion-label>
+            <ion-select [(ngModel)]="selectedClass" (ionChange)="filterSpells()">
+              <ion-select-option *ngFor="let charClass of availableClasses" [value]="charClass">
+                {{ charClass }}
+              </ion-select-option>
+              <ion-select-option value="">Todas</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Lista de Hechizos Filtrados -->
+          <ion-list>
+            <ion-item class="grayItems" lines="none" *ngFor="let spell of getFilteredSpells()">
+              <ion-label>
+                <h2>{{ spell.name }}</h2>
+                <p>Nivel: {{ spell.level }} | Escuela: {{ spell.school }}</p>
+              </ion-label>
+              <ion-button fill="none" (click)="addSpell(spell)" color="primary"><ion-icon slot="start"
+                  name="add"></ion-icon></ion-button>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+    <ion-modal [isOpen]="isCustomAbilityModalOpen" (ionModalWillDismiss)="closeCustomAbilityModal()">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Crear Habilidad Personalizada</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="closeCustomAbilityModal()">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content class="customSpellModal">
+          <!-- Formulario para crear habilidad personalizada -->
+          <ion-item lines="none">
+            <ion-label position="stacked">Nombre</ion-label>
+            <ion-input [(ngModel)]="newCustomAbility.name" placeholder="Introduce el nombre"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label position="stacked">Descripción</ion-label>
+            <ion-textarea [(ngModel)]="newCustomAbility.description"
+              placeholder="Descripción de la habilidad"></ion-textarea>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label position="stacked">Alcance</ion-label>
+            <ion-input [(ngModel)]="newCustomAbility.range" placeholder="Introduce el alcance"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label position="stacked">Duración</ion-label>
+            <ion-input [(ngModel)]="newCustomAbility.duration" placeholder="Introduce la duración"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label position="stacked">Daño</ion-label>
+            <ion-input [(ngModel)]="newCustomAbility.damage" placeholder="Introduce el daño (ej. 2d6)"></ion-input>
+          </ion-item>
+          <ion-button expand="block" class="saveCustomSpell" (click)="addCustomAbility()">Guardar Habilidad</ion-button>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+
+    <ion-content>
+      <!-- Huecos de Hechizo -->
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Huecos de Hechizo</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4" *ngFor="let level of spellLevels">
+                <div class="spell-slot-box">
+                  <div class="spell-slot-title">Nivel {{ level }}</div>
+                  <ion-input class="slots" type="number" [value]="getSpellSlot(level)"
+                    (ionChange)="onSpellSlotChange($event, level)" [min]="0" [max]="10" placeholder="0"
+                    inputmode="numeric"></ion-input>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Lista de Hechizos Conocidos -->
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Hechizos Conocidos</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list class="known-spells-list">
+            <ion-item lines="none" *ngFor="let spell of character.spellcasting?.spellsKnown" class="knownSpellsListItem">
+              <ion-label>
+                <h2>{{ spell.name }}</h2>
+                <p>Nivel {{ spell.level }} | {{ spell.school }}</p>
+                <small>{{ spell.description }}</small>
+                <small>{{ spell.damage }}</small>
+              </ion-label>
+              <ion-button color="danger" (click)="removeSpell(spell)">
+                Quitar
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Botón para añadir hechizos -->
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="ion-fabs-buttons">
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <ion-fab-button
+            style="background: var(--ion-color-gradient-primary); color: var(--ion-color-gradient-primary-contrast);"
+            (click)="openSpellModal()">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+          <ion-fab-button
+            style="background: var(--ion-color-gradient-primary); color: var(--ion-color-gradient-primary-contrast);"
+            (click)="openCustomAbilityModal()">
+            <ion-icon name="construct"></ion-icon>
+          </ion-fab-button>
+        </div>
+      </ion-fab>
+
+    </ion-content>
+  </ion-tab>
+</ion-tabs>

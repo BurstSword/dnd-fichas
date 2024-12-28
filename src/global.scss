@@ -35,3 +35,123 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+/* Fondo general de la app */
+body,
+ion-content {
+  --background: rgb(63,94,251);
+  --background: linear-gradient(146deg, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+  color: rgb(255, 255, 255);
+  /* Texto principal */
+  font-family: 'Inter', sans-serif;
+  z-index: -100 !important;
+}
+
+/* Estilos de las cards */
+ion-card {
+  background: #312f2fb6!important;
+  /* Fondo de las cards */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  color: rgb(255, 255, 255);
+  /* Texto dentro de las cards */
+  margin-bottom: 16px;
+  /* Espaciado entre cards */
+}
+
+ion-card-title {
+  color: rgb(255, 255, 255);
+  /* Títulos */
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+ion-card-subtitle {
+  color: rgb(163, 163, 194);
+  /* Texto secundario */
+  font-size: 0.9rem;
+}
+
+/* Botones globales dentro de cards */
+ion-button {
+  margin: 8px;
+}
+
+/* Estilo para los FAB */
+ion-fab {
+  background: rgb(16, 19, 42);
+  /* Fondo de FAB */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+ion-fab-button {
+  background: rgb(76, 141, 245);
+  /* Azul brillante */
+  color: rgb(255, 255, 255);
+  /* Blanco */
+  border-radius: 50%;
+}
+
+ion-fab-button:hover {
+  background: rgb(83, 225, 247);
+  /* Cian brillante */
+}
+
+/* Listas */
+ion-list {
+  --background: transparent !important;
+  /* Fondo oscuro */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  margin-bottom: 16px;
+}
+
+ion-item {
+  --background: transparent;
+  --color: rgb(255, 255, 255);
+  /* Blanco */
+}
+
+/* Modales */
+ion-modal {
+  background: rgb(16, 19, 42);
+  /* Fondo del modal */
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Barra superior */
+ion-header {
+  --background: #312f2fb6!important;
+  /* Fondo oscuro */
+}
+
+ion-title {
+  color: rgb(255, 255, 255);
+  /* Blanco */
+  font-size: 1.4rem;
+}
+
+/* Iconos */
+ion-icon {
+  color: rgb(255, 255, 255);
+  /* Azul */
+}
+
+ion-icon:hover {
+  color: rgb(83, 225, 247);
+  /* Cian brillante */
+}
+
+ion-toolbar{
+  --background: #351f1f00;
+}
+
+ion-card-header {
+  --background: #351f1f00;
+}
+
+ion-header{
+  --background: rgba(45, 29, 83, 0.8);
+}

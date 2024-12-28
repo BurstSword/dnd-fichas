@@ -1,0 +1,477 @@
+ion-card {
+  margin: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #312f2f;
+}
+
+ion-row.equal-boxes {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  /* Ensures all boxes are the same height */
+  flex-wrap: wrap;
+  /* Wraps items to the next row if there's not enough space */
+}
+
+.attribute-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  height: 100%;
+  /* Ensures equal height */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0px;
+  /* Añadimos espacio entre las cajas */
+}
+
+
+.attribute-title {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--ion-color-dark);
+  margin-bottom: 5px;
+}
+
+.attribute-value {
+  font-size: 1rem;
+  color: var(--ion-color-primary);
+}
+
+.modifierText {
+  color: #4caf50;
+}
+
+ion-col {
+  padding: 5px;
+  /* Espaciado interno de las columnas */
+}
+
+ion-list {
+  --background: none;
+}
+
+ion-item {
+  --background: var(--ion-color-light);
+  --inner-padding-top: 12px;
+  --inner-padding-bottom: 12px;
+  --min-height: 70px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  /* Spacing between items */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Soft shadow for better aesthetics */
+}
+
+ion-modal ion-item{
+  flex-grow: 1;
+}
+
+ion-label h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--ion-color-dark);
+}
+
+ion-label p {
+  font-size: 1rem;
+  color: var(--ion-color-primary);
+  margin: 5px 0;
+  /* Spacing between details */
+}
+
+
+ion-item h2 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+ion-item p {
+  margin: 2px 0;
+  color: #666;
+}
+
+.spell-level-row {
+  width: 100%;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alinea todo el contenido a la izquierda */
+}
+
+.spell-level-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.spell-level-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.spell-level-counter {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.spell-slot-container {
+  display: flex; /* Alinea los checkboxes a la izquierda */
+  align-items: center;
+  gap: 0.5rem; /* Espacio entre checkboxes */
+  flex-wrap: wrap;
+  width: 100%; /* Ocupa todo el ancho */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 0.75rem;
+  box-sizing: border-box; /* Asegura que el padding no rompa el ancho */
+}
+
+.spell-slot-checkbox {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border-radius: 4px;
+  flex-shrink: 0; /* Evita que los checkboxes se reduzcan */
+}
+
+
+
+.radio-container {
+  cursor: pointer;
+  /* Cambia el cursor para indicar interactividad */
+  display: flex;
+  /* Asegura que el contenido sea flexible */
+  justify-content: center;
+  /* Centra el icono dentro del contenedor */
+  align-items: center;
+  width: 40px;
+  /* Ajusta el tamaño del radio si es necesario */
+  height: 40px;
+  border-radius: 50%;
+  /* Hace los bordes redondeados si deseas */
+}
+
+.radio-container.selected ion-icon {
+  color: var(--ion-color-primary);
+  /* Color activo para el icono seleccionado */
+}
+
+
+.custom-radio {
+  font-size: 20px;
+  color: var(--ion-color-light);
+}
+
+.secondary-stat-box {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.hp-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hp-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.hp-header ion-input {
+  width: 45px;
+  margin: 0 3px;
+  text-align: center;
+  font-size: 14px;
+}
+
+ion-progress-bar.compact-bar {
+  width: 80%;
+  height: 10px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+ion-card-header {
+  display: flex;
+  align-items: right;
+  justify-content: space-between;
+  padding: 8px;
+  background: #312f2f;
+  /* Ajusta si es necesario */
+}
+
+
+ion-card-title {
+  margin: 0;
+}
+
+ion-modal {
+  --max-height: 70%;
+  /* Más compacto */
+  --border-radius: 16px;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Botón estilo Material Design */
+/* Contenedor para alinear el botón a la derecha */
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  /* Alínea el botón a la derecha */
+  margin-top: 16px;
+  /* Espacio superior */
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Espacia los elementos uniformemente */
+  flex-grow: 1; /* Hace que ocupe todo el espacio disponible */
+}
+
+/* Ajustar ion-item para que ocupe el alto disponible */
+ion-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espaciado entre elementos */
+  flex-grow: 1;
+}
+
+.md-save-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: linear-gradient(180deg, rgba(226, 200, 255, 1) 0%, rgba(123, 95, 172, 1) 44%, rgba(45, 29, 83, 1) 89%);
+  border: none;
+  border-radius: 4px;
+  padding: 12px 16px;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  width: 100%;
+  height: 55px;
+  margin-top: 12px; /* Añadimos margen superior */
+}
+
+.md-save-button:hover {
+  background-color: #3700b3;
+  /* Tono más oscuro al pasar el ratón */
+  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0px 10px 15px 0px rgba(0, 0, 0, 0.2),
+    0px 2px 20px 0px rgba(0, 0, 0, 0.15);
+  /* Mayor profundidad */
+}
+
+.md-save-button:active {
+  background-color: #290d76;
+  /* Tono más oscuro al hacer clic */
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 8px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  /* Menor profundidad */
+}
+
+.md-save-button ion-icon {
+  font-size: 1.2rem;
+  margin-right: 8px;
+  /* Espacio entre icono y texto */
+}
+
+.skill-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  /* Se adapta al contenedor */
+  height: 50px;
+  /* Altura fija para todas las habilidades */
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  padding: 0 15px;
+  /* Espaciado interno */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.skill-name {
+  font-size: 0.9rem;
+  color: var(--ion-color-dark);
+  font-weight: bold;
+  flex: 1;
+  /* Ocupa el espacio restante */
+  text-align: left;
+}
+
+.skill-modifier {
+  font-size: 1rem;
+  color: var(--ion-color-primary);
+  font-weight: bold;
+  width: 50px;
+  /* Tamaño fijo para alineación */
+  text-align: center;
+}
+
+.notes {
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  color: var(--ion-color-dark);
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+ion-popover {
+  --background: transparent;
+  --box-shadow: none;
+  /* Sin sombra */
+  --backdrop-opacity: 0;
+  /* Sin fondo oscuro */
+  --border-radius: 0;
+  /* Sin bordes redondeados */
+}
+
+ion-list {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+ion-item {
+  --min-height: 40px;
+  --inner-padding-end: 8px;
+  --padding-start: 8px;
+}
+
+ion-icon {
+  color: var(--ion-color-dark);
+  /* Asegúrate de usar un color visible */
+  font-size: 1.5rem;
+}
+
+.saving-throw-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  margin: 5px;
+}
+
+.saving-throw-title {
+  font-weight: bold;
+  color: var(--ion-color-dark);
+  margin-bottom: 5px;
+}
+
+.saving-throw-value {
+  font-size: 1.2rem;
+  color: var(--ion-color-primary);
+}
+
+.death-saving-throws-single-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.death-radio-group {
+  display: flex;
+  gap: 10px;
+}
+
+ion-radio {
+  --background: var(--ion-color-light);
+  --border-color: var(--ion-color-medium);
+  --size: 20px;
+}
+
+.death-icon-left {
+  font-size: 28px;
+  color: var(--ion-color-danger);
+}
+
+.death-icon-right {
+  font-size: 28px;
+  color: var(--ion-color-success);
+}
+
+.death-icon-center {
+  font-size: 30px;
+  margin: 0 10px;
+  color: var(--ion-color-success);
+}
+
+.middle-icon {
+  width: 50px;
+  height: 50px;
+}
+
+ion-modal ion-content {
+  --background: #312f2f;
+}
+
+ion-modal ion-card {
+  --background: #312f2f;
+  box-shadow: none;
+}
+ion-card-header{
+  background: #312f2f00 !important;
+}
+
+.death-saving-throws-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: 8px;
+}
+
+.death-saving-throws-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.death-icon {
+  font-size: 24px;
+  color: var(--ion-color-medium);
+}
+
+.death-checkbox-group {
+  display: flex;
+  gap: 8px;
+}
+
+.death-checkbox-group ion-checkbox {
+  --size: 24px;
+}

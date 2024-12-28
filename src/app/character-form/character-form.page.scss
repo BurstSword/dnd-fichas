@@ -1,0 +1,324 @@
+//BASE DATA
+.attribute-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  height: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.attribute-title {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--ion-color-dark);
+  margin-bottom: 5px;
+}
+
+.attribute-value-modifier {
+  display: flex;
+  align-items: center;
+  /* Alinea verticalmente en el centro */
+  justify-content: space-between;
+  /* Espacia los elementos uniformemente */
+  width: 100%;
+  /* Ocupa el ancho completo del contenedor */
+}
+
+.attribute-modifier {
+  font-size: 1rem;
+  /* Ajusta el tamaño del texto */
+  color: #45a049;
+  /* Estilo del color del modificador */
+  margin-left: 8px;
+  /* Espacio entre el input y el modificador */
+  display: flex;
+  align-items: center;
+  /* Asegura el centrado vertical dentro de flexbox */
+  height: 100%;
+  /* Mantiene la misma altura que el input */
+}
+
+.attribute-value {
+  font-size: 1.2rem;
+  /* Ajusta el tamaño del texto */
+  text-align: center;
+  /* Centra el valor dentro del input */
+  width: 50px;
+  /* Tamaño fijo para el input */
+  height: 40px;
+  /* Asegura la altura consistente */
+  color: var(--ion-color-primary);
+}
+
+
+
+
+
+// SKILLS
+
+/* Contenedor de las habilidades */
+/***** Estilos generales del acordeón *****/
+.accordion-header {
+  background-color: #2d2d2d;
+  /* Fondo oscuro */
+  color: #ffffff;
+  /* Texto claro */
+  font-weight: bold;
+  font-size: 16px;
+  padding: 12px;
+  border-radius: 5px;
+  /* Bordes redondeados */
+  margin-bottom: 5px;
+  /* Separación entre acordeones */
+  cursor: pointer;
+  /* Icono de "manita" al pasar por encima */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Alinear texto e icono */
+  transition: background-color 0.3s ease;
+  /* Transición suave */
+}
+
+.accordion-header:hover {
+  background-color: #312f2f;
+  /* Cambia el fondo al pasar el mouse */
+}
+
+.accordion-header ion-icon {
+  font-size: 20px;
+  color: white;
+  /* Icono de color verde */
+}
+
+/***** Contenedor de habilidades *****/
+.skill-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  /* Espacio entre habilidades */
+  padding: 10px;
+  background-color: #312f2f;
+  /* Fondo más oscuro para las habilidades */
+  border-radius: 5px;
+  margin-bottom: 10px;
+  /* Espacio entre el contenedor y el siguiente acordeón */
+}
+
+.skill-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.skill-box:hover {
+  transform: scale(1.05);
+  /* Aumenta ligeramente al pasar el mouse */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  /* Sombra más grande */
+}
+
+.skill-name {
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  margin-bottom: 5px;
+}
+
+/***** Modificador de la habilidad *****/
+.skill-modifier {
+  font-size: 16px;
+  font-weight: bold;
+  color: #4caf50;
+  /* Verde para resaltar */
+  margin-bottom: 10px;
+}
+
+.skill-checkbox {
+  margin-top: 5px;
+}
+
+ion-modal {
+  --height: 90%;
+  --width: 90%;
+  --border-radius: 10px;
+}
+
+.add-spell-button {
+  --background: #4caf50;
+  /* Color de fondo */
+  --background-hover: #45a049;
+  /* Color al pasar el cursor */
+  --color: white;
+  /* Color del texto */
+  --border-radius: 12px;
+  /* Bordes redondeados */
+  font-weight: bold;
+  /* Texto en negrita */
+  margin: 20px 0;
+  /* Espaciado superior e inferior */
+  padding: 10px;
+  /* Espaciado interno */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  /* Sombra */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* Animación */
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  /* Alínea el botón a la derecha */
+  margin-top: 16px;
+  /* Espacio superior */
+}
+
+/* Botón estilo Material Design */
+.md-save-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+  /* Texto blanco */
+  background: rgb(226, 200, 255);
+  background: linear-gradient(135deg, #6f45e2d2, #88d3ced3);
+  /* Color principal de Material Design */
+  border: none;
+  border-radius: 4px;
+  /* Esquinas ligeramente redondeadas */
+  padding: 12px 16px;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  /* Sombra Material */
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  width: 100%;
+}
+
+.add-spell-button:hover {
+  transform: translateY(-2px);
+  /* Efecto de "levantar" al pasar el cursor */
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+  /* Sombra más intensa */
+}
+
+.known-spells-list {
+  max-height: 300px;
+  /* Altura máxima para la lista */
+  overflow-y: auto;
+  /* Activar scroll vertical */
+}
+
+.spell-slot-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--ion-color-light);
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.knownSpellsListItem{
+  padding: 10px;
+  border-radius: 43px !important;
+}
+
+.spell-slot-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.slots {
+  color: var(--ion-color-primary);
+}
+
+/* Estilo del header del acordeón */
+ion-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: #312f2f;
+}
+
+ion-card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--ion-color-dark);
+}
+
+ion-toolbar {
+  --background: #312f2f;
+}
+
+.skillsContainer {
+  background: #312f2f;
+}
+
+.grayItems {
+  --background: #312f2f;
+}
+
+ion-card-content {
+  background: #312f2f;
+}
+
+ion-list {
+  background: #312f2f;
+}
+
+ion-item {
+  --background: #222428;
+  border-radius: 5px;
+}
+
+ion-fab {
+  background: transparent;
+  box-shadow: none;
+}
+
+ion-fab-button {
+  --background: transparent;
+  --background-hover: transparent;
+  --color: white;
+  font-weight: bold;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ion-fab-buttons{
+  ion-icon{
+    color: white !important;
+  }
+}
+
+.customSpellModal{
+  --background: #312f2f;
+
+  ion-item{
+    --background: #222428;
+    border-radius: 43px;
+    padding: 10px;
+  }
+}
+
+.saveCustomSpell{
+  --background: rgb(226, 200, 255);
+  --background: linear-gradient(135deg, #6f45e2d2, #88d3ced3);
+}

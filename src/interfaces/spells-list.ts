@@ -1,0 +1,181 @@
+import { Spell } from "./character";
+
+export const spellsLibrary: Record<number, Spell[]> = {
+  0: [
+    {
+      name: "Disparo Trucado",
+      level: 1,
+      school: "",
+      classes: [
+        "Bárbaro",
+        "Bardo",
+        "Clérigo",
+        "Druida",
+        "Guerrero",
+        "Hechicero",
+        "Mago",
+        "Monje",
+        "Paladín",
+        "Pícaro",
+        "Explorador",
+        "Brujo"
+      ],
+      components: [],
+      castingTime: "Acción",
+      range: "",
+      duration: "",
+      description: "Ignoras desventaja por largo alcance y cualquier cobertura parcial. Añades tu dado de truco al daño. (x2 al nivel 11, x3 al nivel 17).",
+      damage: ""
+    },
+    {
+      name: "Apuntar con Cuidado",
+      level: 1,
+      school: "",
+      classes: [
+        "Bárbaro",
+        "Bardo",
+        "Clérigo",
+        "Druida",
+        "Guerrero",
+        "Hechicero",
+        "Mago",
+        "Monje",
+        "Paladín",
+        "Pícaro",
+        "Explorador",
+        "Brujo"
+      ],
+      components: [],
+      castingTime: "",
+      range: "",
+      duration: "1 minuto",
+      description: "Si no atacas ni lanzas un hechizo en tu turno, ganas puntos de puntería igual a la mitad de tu competencia (redondeado arriba). Máximo: Nivel de Pistolero. Al atacar al objetivo marcado, infliges 1d4 daño adicional (aumenta con el dado de truco). Pierdes los puntos al atacar, lanzar un hechizo o perder de vista al objetivo por 1 minuto.",
+      damage: "1d4"
+    },
+    {
+      name: "Infierno de Balas",
+      level: 2,
+      school: "",
+      classes: [
+        "Bárbaro",
+        "Bardo",
+        "Clérigo",
+        "Druida",
+        "Guerrero",
+        "Hechicero",
+        "Mago",
+        "Monje",
+        "Paladín",
+        "Pícaro",
+        "Explorador",
+        "Brujo"
+      ],
+      components: [],
+      castingTime: "Sin acción",
+      range: "",
+      duration: "",
+      description: "Realiza 1 ataque adicional a distancia. (2 ataques al nivel 5, 3 al nivel 11, 4 al nivel 17). Usable 1 vez por descanso largo. (+1 uso al nivel 13).",
+      damage: ""
+    },
+    {
+      name: "Puntería Asombrosa",
+      level: 2,
+      school: "",
+      classes: [
+        "Bárbaro",
+        "Bardo",
+        "Clérigo",
+        "Druida",
+        "Guerrero",
+        "Hechicero",
+        "Mago",
+        "Monje",
+        "Paladín",
+        "Pícaro",
+        "Explorador",
+        "Brujo"
+      ],
+      components: [],
+      castingTime: "Acción Bonus",
+      range: "Visible dentro de tu alcance",
+      duration: "",
+      description: "Gasta puntos de puntería para infligir daño igual a tu Dado de Truco por punto gastado a una criatura visible dentro de tu alcance. Ignora resistencias e inmunidades a daño no mágico. Usos: Mod. DEX + Competencia (recuperables tras descanso largo).",
+      damage: "Variable (Dado de Truco por punto gastado)"
+    },
+    {
+      name: "Disparo Rápido",
+      level: 5,
+      school: "",
+      classes: [
+        "Bárbaro",
+        "Bardo",
+        "Clérigo",
+        "Druida",
+        "Guerrero",
+        "Hechicero",
+        "Mago",
+        "Monje",
+        "Paladín",
+        "Pícaro",
+        "Explorador",
+        "Brujo"
+      ],
+      components: [],
+      castingTime: "Acción Bonus",
+      range: "",
+      duration: "",
+      description: "Gasta 2 puntos de puntería por ataque para realizar 1 ataque a distancia por cada 2 puntos gastados.",
+      damage: ""
+    },
+    {
+      name: "Oleada de Energía",
+      level: 7,
+      school: "",
+      classes: [
+        "Bárbaro",
+        "Bardo",
+        "Clérigo",
+        "Druida",
+        "Guerrero",
+        "Hechicero",
+        "Mago",
+        "Monje",
+        "Paladín",
+        "Pícaro",
+        "Explorador",
+        "Brujo"
+      ],
+      components: [],
+      castingTime: "Acción Bonus",
+      range: "",
+      duration: "",
+      description: "Recupera 1 uso de una habilidad que recupere tras descanso largo/corto/iniciativa o gana puntos de puntería igual a tu nivel de Pistolero. Usable 1 vez por descanso largo.",
+      damage: ""
+    },
+    {
+      name: "Disparo Letal",
+      level: 9,
+      school: "",
+      classes: [
+        "Bárbaro",
+        "Bardo",
+        "Clérigo",
+        "Druida",
+        "Guerrero",
+        "Hechicero",
+        "Mago",
+        "Monje",
+        "Paladín",
+        "Pícaro",
+        "Explorador",
+        "Brujo"
+      ],
+      components: [],
+      castingTime: "Acción",
+      range: "",
+      duration: "",
+      description: "Como acción, realiza un disparo letal contra una criatura con un CR ≤ 2x tu nivel. Lanza un d10:\n\n1-2: El disparo falla, pero el arma queda temporalmente desajustada. Pierdes tu próximo ataque con esa arma.\n3-9: PV actuales y máximos del objetivo se reducen a la mitad hasta un descanso corto o largo.\n10: El objetivo queda reducido a 0 PV.\n\nRecuperación:\n1-9: Se recupera al iniciar combate.\n10: No puede usarse por 7 días.",
+      damage: ""
+    }
+  ]
+};

@@ -1,0 +1,90 @@
+ion-grid {
+    margin: 20px 0;
+}
+
+.dice-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background: var(--ion-color-light);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dice-icon img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 8px;
+}
+
+.dice-label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: var(--ion-color-dark);
+}
+
+ion-input {
+    width: 50%;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.white-dice {
+    filter: brightness(0) invert(1);
+    /* Cambia los colores a blanco */
+    width: 100%;
+    /* Ajusta el tamaño de la imagen */
+    height: auto;
+}
+
+numeric-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.numeric-input button {
+    background: var(--ion-color-primary);
+    color: white;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+
+.numeric-input ion-input {
+    width: 60px;
+    text-align: center;
+    border: 1px solid var(--ion-color-medium);
+    border-radius: 5px;
+    padding: 5px;
+    background: var(--ion-color-light);
+    font-size: 1.2rem;
+}
+
+.dice-results img {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    animation: roll 0.5s ease-out;
+}
+
+@keyframes roll {
+    0% {
+        transform: rotate(0deg) scale(0.8);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(1.2);
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}

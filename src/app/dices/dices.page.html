@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Selector de Dados</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Grid de Dados -->
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4" *ngFor="let dice of diceTypes">
+        <div class="dice-selector">
+          <!-- Imagen/Icono del Dado -->
+          <div class="dice-icon">
+            <img class="white-dice" [src]="'assets/dice-d' + dice + '.png'" alt="Dado d{{ dice }}" />
+          </div>
+          <!-- Selector Numérico -->
+          <ion-input
+            type="number"
+            [(ngModel)]="selectedDiceQuantities[dice]"
+            min="0"
+            placeholder="0"
+          ></ion-input>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Botón para tirar -->
+  <ion-button expand="block" color="primary" (click)="rollDice()">Lanzar Dados</ion-button>
+
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Resultados de los Dados</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="dice-results" *ngIf="diceResults.length > 0">
+        <div *ngFor="let result of diceResults" class="dice-result">
+          <img [src]="'assets/dice-d' + result.type + '.png'" alt="d{{ result.type }}" />
+          <span>d{{ result.type }}: {{ result.value }}</span>
+        </div>
+      </div>
+      <div *ngIf="diceResults.length === 0">
+        <p>No has lanzado ningún dado aún.</p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  
+</ion-content>

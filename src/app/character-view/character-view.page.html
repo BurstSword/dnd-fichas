@@ -1,0 +1,459 @@
+<ion-popover [isOpen]="isOptionsOpen" [event]="popoverEvent" (ionPopoverWillDismiss)="isOptionsOpen = false"
+  translucent>
+  <ng-template>
+    <ion-list>
+      <!-- Opción Editar -->
+      <ion-item button (click)="editCharacter()">
+        <ion-icon name="create-outline" slot="start"></ion-icon>
+        Editar
+      </ion-item>
+      <!-- Opción Eliminar -->
+      <ion-item button color="danger" (click)="confirmDeleteCharacter()">
+        <ion-icon name="trash-outline" slot="start"></ion-icon>
+        Eliminar
+      </ion-item>
+      <ion-item button (click)="exportCharacter()">
+        <ion-icon name="download-outline" slot="start"></ion-icon>
+        Exportar JSON
+      </ion-item>
+    </ion-list>
+  </ng-template>
+</ion-popover>
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="character">{{character.name}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openOptions($event)">
+        <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <!-- Verifica si el personaje existe -->
+  <ng-container *ngIf="character; else noCharacter">
+    <!-- Información básica -->
+    <ion-card>
+      <ion-card-header>
+        <ion-toolbar>
+          <ion-title>{{ character.name }}</ion-title>
+        </ion-toolbar>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="6">
+            <p><strong>Class:</strong> {{ character.class || 'Ninguna' }}</p>
+            <p><strong>Level:</strong> {{ character.level || 1 }}</p>
+          </ion-col>
+          <ion-col size="6">
+            <p><strong>Archetype:</strong> {{ character.archetype || 'Ninguno' }}</p>
+            <p><strong>Proficiency</strong> {{ character.proficiency || 0 }}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="8">
+            <div class="hp-box">
+              <div class="hp-header">
+                <ion-button fill="clear" size="small" (click)="adjustHP(character, -1)">
+                  <ion-icon name="remove-circle-outline"></ion-icon>
+                </ion-button>
+                <strong>HP:</strong>
+                <ion-input disabled type="number" [(ngModel)]="character.secondaryStats.currentHP"
+                  placeholder="Actual"></ion-input>
+                /
+                <ion-input type="number" (ionBlur)="saveMaxHP()" [(ngModel)]="character.secondaryStats.maxHP"
+                  placeholder="Máximo"></ion-input>
+
+                <ion-button fill="clear" size="small" (click)="adjustHP(character, 1)">
+                  <ion-icon name="add-circle-outline"></ion-icon>
+                </ion-button>
+              </div>
+              <ion-progress-bar [value]="character.secondaryStats.currentHP / character.secondaryStats.maxHP"
+                [color]="getHPBarColor(character.secondaryStats.currentHP, character.secondaryStats.maxHP)"
+                class="compact-bar"></ion-progress-bar>
+            </div>
+          </ion-col>
+          <ion-col size="4">
+            <!--  -->
+            <div class="attribute-box">
+              <div class="attribute-title">Iniciativa</div>
+              <div class="attribute-value">
+                <ion-input type="number" [(ngModel)]="character.initiative" (ionBlur)="saveInitiative()"
+                  placeholder="Iniciativa"></ion-input>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Atributos -->
+    <ion-card>
+      <ion-card-header>
+        <ion-toolbar>
+          <ion-title>Attributes</ion-title>
+        </ion-toolbar>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="4" *ngFor="let attr of attributes">
+              <div class="attribute-box">
+                <div class="attribute-title">{{ attr.label }}</div>
+                <div class="attribute-value">
+                  {{ character.attributes[attr.key] || 0 }}
+                  /
+                  <span [ngClass]="{ 'modifierText': character.savingThrows[attr.key] }">
+                    +{{ calculateModifier(character.attributes[attr.key]) }}
+                  </span>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Estadísticas secundarias -->
+    <ion-card>
+      <ion-card-header>
+        <ion-toolbar>
+          <ion-title>Secondary Stats</ion-title>
+        </ion-toolbar>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="equal-boxes">
+            <ion-col size="3">
+              <div class="attribute-box">
+                <div class="attribute-title">Max HP</div>
+                <div class="attribute-value">
+                  {{ character.secondaryStats.maxHP || 0 }}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="attribute-box">
+                <div class="attribute-title">CA</div>
+                <div class="attribute-value">
+                  {{ character.secondaryStats.armorClass || 0 }}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="attribute-box">
+                <div class="attribute-title">Initiative</div>
+                <div class="attribute-value">
+                  {{ character.secondaryStats.initiative || 0 }}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="attribute-box">
+                <div class="attribute-title">Speed</div>
+                <div class="attribute-value">
+                  {{ character.secondaryStats.speed || 0 }} ft
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header (click)="toggleSavingThrows()">
+        <ion-toolbar>
+          <ion-title>Tiradas de Salvación</ion-title>
+          <ion-buttons slot="end">
+            <ion-icon [name]="savingThrowsExpanded ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card-header>
+      <ion-card-content *ngIf="savingThrowsExpanded">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6" *ngFor="let attr of attributes">
+              <div class="saving-throw-box">
+                <div class="saving-throw-title">{{ attr.label }}</div>
+                <div class="saving-throw-value">
+                  +{{ calculateSavingThrow(character.attributes[attr.key], attr.key) }}
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header (click)="toggleDeathSaves()">
+        <ion-toolbar>
+          <ion-title>Tiradas de Muerte</ion-title>
+          <ion-buttons slot="end">
+            <ion-icon [name]="deathSavesExpanded ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card-header>
+      <ion-card-content *ngIf="deathSavesExpanded">
+        <div class="death-saving-throws-container">
+          <!-- Fallos (☠️) -->
+          <div class="death-saving-throws-section">
+            <ion-icon name="skull-outline" class="death-icon"></ion-icon>
+            <div class="death-checkbox-group">
+              <ion-checkbox [(ngModel)]="character.deathSaveFails[0]" (ionChange)="updateDeathSaves()"></ion-checkbox>
+              <ion-checkbox [(ngModel)]="character.deathSaveFails[1]" (ionChange)="updateDeathSaves()"></ion-checkbox>
+              <ion-checkbox [(ngModel)]="character.deathSaveFails[2]" (ionChange)="updateDeathSaves()"></ion-checkbox>
+            </div>
+          </div>
+
+          <!-- Éxitos (❤️) -->
+          <div class="death-saving-throws-section">
+            <ion-icon name="heart-outline" class="death-icon"></ion-icon>
+            <div class="death-checkbox-group">
+              <ion-checkbox [(ngModel)]="character.deathSaveSuccesses[0]"
+                (ionChange)="updateDeathSaves()"></ion-checkbox>
+              <ion-checkbox [(ngModel)]="character.deathSaveSuccesses[1]"
+                (ionChange)="updateDeathSaves()"></ion-checkbox>
+              <ion-checkbox [(ngModel)]="character.deathSaveSuccesses[2]"
+                (ionChange)="updateDeathSaves()"></ion-checkbox>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+
+
+    <!-- Equipo -->
+    <ion-card>
+      <ion-card-header (click)="toggleEquipment()">
+        <ion-toolbar>
+          <!-- Título a la izquierda -->
+          <ion-title>Equipamiento</ion-title>
+          <ion-buttons slot="end">
+            <ion-icon [name]="equipmentExpanded ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+          </ion-buttons>
+          <!-- Botón a la derecha -->
+        </ion-toolbar>
+      </ion-card-header>
+
+
+
+      <ion-card-content *ngIf="equipmentExpanded">
+        <!-- Lista de otros objetos -->
+        <ion-list>
+          <ion-item lines="none" *ngFor="let item of character.equipment.items; let i = index">
+            <ion-label>
+              <h2>{{ item.name }}</h2>
+              <p>{{ item.description }}</p>
+              <p *ngIf="item.damage">Daño: {{ item.damage }}
+                Bonificador: {{ modifiers[item.attribute] >= 0 ? '+' : '' }}
+                {{ calculateModifier(character.attributes[item.attribute]) }}
+              </p>
+            </ion-label>
+            <ion-button fill="none" (click)="removeItem(i)"><ion-icon slot="end" name="trash"></ion-icon></ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header (click)="toggleSkills()">
+        <ion-toolbar>
+          <!-- Título a la izquierda -->
+          <ion-title>Habilidades</ion-title>
+
+          <!-- Botón a la derecha -->
+          <ion-buttons slot="end">
+            <ion-icon [name]="skillsExpanded ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card-header>
+      <ion-card-content *ngIf="skillsExpanded">
+        <ion-grid>
+          <ion-row>
+            <!-- Recorremos las habilidades y las dividimos en columnas -->
+            <ion-col size="6" *ngFor="let skill of skills">
+              <div class="skill-box">
+                <div class="skill-name">{{ skill.name }}</div>
+                <div class="skill-modifier">
+                  {{ calculateSkillModifier(skill.key) >= 0 ? '+' : '' }}
+                  {{ calculateSkillModifier(skill.key) }}
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card
+      *ngIf="character.spellcasting && character.spellcasting.spellsKnown && character.spellcasting.spellsKnown.length > 0">
+      <ion-card-header (click)="toggleSpells()">
+        <ion-toolbar>
+          <!-- Título a la izquierda -->
+          <ion-title>Hechizos</ion-title>
+
+          <!-- Botón a la derecha -->
+          <ion-buttons slot="end">
+            <ion-icon [name]="spellsExpanded ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card-header>
+      <ion-card-content *ngIf="spellsExpanded">
+        <ion-item lines="none">
+          <ion-label>Nivel</ion-label>
+          <ion-select [(ngModel)]="selectedSpellLevel" (ionChange)="filterSpellsByLevel()">
+            <ion-select-option value="">Todos</ion-select-option>
+            <ion-select-option *ngFor="let level of spellLevels" [value]="level">
+              Nivel {{ level }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-list>
+          <ion-item lines="none" *ngFor="let spell of filteredSpells">
+            <ion-label>
+              <h2>{{ spell.name }}</h2>
+              <p>Nivel {{ spell.level }} | {{ spell.school }}</p>
+              <small>{{ spell.description }}</small>
+              <small *ngIf="spell.damage"> {{ spell.damage }}</small>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+
+    <!-- Modal para añadir equipamiento -->
+    <ion-modal class="itemModal" [isOpen]="isEquipmentModalOpen" (ionModalWillDismiss)="closeEquipmentModal()">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Añadir Equipamiento</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="closeEquipmentModal()">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content class="itemModal">
+          <div class="modal-container">
+            <ion-card-content>
+              <!-- Nombre del equipamiento -->
+              <ion-item lines="none">
+                <ion-label position="stacked">Nombre</ion-label>
+                <ion-input [(ngModel)]="newEquipment.name" placeholder="Ejemplo: Espada larga"></ion-input>
+              </ion-item>
+
+              <!-- Tipo del equipamiento -->
+              <ion-item lines="none">
+                <ion-label position="stacked">Tipo</ion-label>
+                <ion-select [(ngModel)]="newEquipment.type" placeholder="Selecciona">
+                  <ion-select-option value="weapon">Arma</ion-select-option>
+                  <ion-select-option value="item">Objeto</ion-select-option>
+                  <ion-select-option value="potion">Poción</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <!-- Daño solo para armas -->
+              <ion-item lines="none" *ngIf="newEquipment.type === 'weapon'">
+                <ion-label position="stacked">Daño</ion-label>
+                <ion-input [(ngModel)]="newEquipment.damage" placeholder="Ejemplo: 1d8 + 2"></ion-input>
+              </ion-item>
+
+              <!-- Descripción -->
+              <ion-item lines="none">
+                <ion-label position="stacked">Descripción</ion-label>
+                <ion-textarea [(ngModel)]="newEquipment.description"
+                  placeholder="Descripción del equipamiento"></ion-textarea>
+              </ion-item>
+            </ion-card-content>
+          </div>
+        </ion-content>
+
+        <ion-footer>
+          <ion-toolbar>
+            <button class="md-save-button" (click)="addEquipment()">
+              <ion-icon name="save-outline"></ion-icon>
+              Guardar
+            </button>
+          </ion-toolbar>
+        </ion-footer>
+      </ng-template>
+    </ion-modal>
+
+
+
+    <ion-card *ngIf="character.spellcasting.spellSlots[1].max > 0">
+      <ion-card-header (click)="toggleSpellSlots()">
+        <ion-toolbar>
+          <ion-title>Puntos de Hechizo</ion-title>
+          <ion-buttons slot="end">
+            <ion-icon [name]="spellSlotsExpanded ? 'chevron-up' : 'chevron-down'"></ion-icon>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card-header>
+
+      <ion-card-content *ngIf="spellSlotsExpanded">
+        <ion-grid>
+          <ng-container *ngFor="let level of spellLevels">
+            <ng-container *ngIf="character.spellcasting.spellSlots[level]?.max > 0">
+              <ion-row class="spell-level-row">
+                <ion-col size="12">
+                  <div class="spell-level-header">
+                    <h3 class="spell-level-title">Nivel {{ level }}</h3>
+                    <span class="spell-level-counter">
+                      {{ character.spellcasting.spellSlots[level]?.remaining }} /
+                      {{ character.spellcasting.spellSlots[level]?.max }}
+                    </span>
+                  </div>
+                  <div class="spell-slot-container">
+                    <ng-container *ngFor="let slot of getMaxSlots(level); let i = index">
+                      <ion-checkbox [checked]="i + 1 <= character.spellcasting.spellSlots[level]?.remaining"
+                        (ionChange)="toggleSpellSlot(level, i + 1)" class="spell-slot-checkbox">
+                      </ion-checkbox>
+                    </ng-container>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ng-container>
+          </ng-container>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+
+
+    <ion-card>
+      <ion-card-header (click)="toggleNotes()">
+        <ion-toolbar>
+          <!-- Título a la izquierda -->
+          <ion-title>Anotaciones</ion-title>
+          <!-- Botón a la derecha -->
+          <ion-buttons slot="end">
+            <ion-icon [name]="notesExpanded ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card-header>
+      <ion-card-content *ngIf="notesExpanded">
+        <ion-textarea class="notes" rows="6" placeholder="Escribe aquí tus anotaciones..." [(ngModel)]="character.notes"
+          (ionBlur)="saveNotes()"></ion-textarea>
+      </ion-card-content>
+    </ion-card>
+
+  </ng-container>
+
+  <!-- Mensaje cuando no hay personaje -->
+  <ng-template #noCharacter>
+    <ion-card>
+      <ion-card-content>
+        <p>No hay datos del personaje para mostrar.</p>
+      </ion-card-content>
+    </ion-card>
+  </ng-template>
+</ion-content>
