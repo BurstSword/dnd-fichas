@@ -68,7 +68,7 @@ ion-item {
   /* Soft shadow for better aesthetics */
 }
 
-ion-modal ion-item{
+ion-modal ion-item {
   flex-grow: 1;
 }
 
@@ -102,8 +102,40 @@ ion-item p {
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Alinea todo el contenido a la izquierda */
+  align-items: flex-start;
+  /* Alinea todo el contenido a la izquierda */
 }
+
+.spell-level-filter {
+  margin-bottom: 1rem;
+
+  ion-row {
+    justify-content: center;
+    margin-bottom: 0.5rem;
+
+    ion-col {
+      display: flex;
+      justify-content: center;
+      padding: 0.2rem;
+
+      ion-button {
+        width: 100%;
+        text-align: center;
+        font-size: 0.9rem;
+        --background: var(--ion-color-light);
+        /* Fondo de los botones */
+        --color: var(--ion-color-dark);
+        /* Texto oscuro para contraste */
+
+        &.button-disabled {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
+
+
 
 .spell-level-header {
   display: flex;
@@ -128,15 +160,19 @@ ion-item p {
 }
 
 .spell-slot-container {
-  display: flex; /* Alinea los checkboxes a la izquierda */
+  display: flex;
+  /* Alinea los checkboxes a la izquierda */
   align-items: center;
-  gap: 0.5rem; /* Espacio entre checkboxes */
+  gap: 0.5rem;
+  /* Espacio entre checkboxes */
   flex-wrap: wrap;
-  width: 100%; /* Ocupa todo el ancho */
+  width: 100%;
+  /* Ocupa todo el ancho */
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   padding: 0.75rem;
-  box-sizing: border-box; /* Asegura que el padding no rompa el ancho */
+  box-sizing: border-box;
+  /* Asegura que el padding no rompa el ancho */
 }
 
 .spell-slot-checkbox {
@@ -147,7 +183,8 @@ ion-item p {
   align-items: center;
   background: transparent;
   border-radius: 4px;
-  flex-shrink: 0; /* Evita que los checkboxes se reduzcan */
+  flex-shrink: 0;
+  /* Evita que los checkboxes se reduzcan */
 }
 
 
@@ -244,15 +281,18 @@ ion-modal {
 .modal-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Espacia los elementos uniformemente */
-  flex-grow: 1; /* Hace que ocupe todo el espacio disponible */
+  justify-content: space-between;
+  /* Espacia los elementos uniformemente */
+  flex-grow: 1;
+  /* Hace que ocupe todo el espacio disponible */
 }
 
 /* Ajustar ion-item para que ocupe el alto disponible */
 ion-card-content {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Espaciado entre elementos */
+  gap: 16px;
+  /* Espaciado entre elementos */
   flex-grow: 1;
 }
 
@@ -273,7 +313,8 @@ ion-card-content {
   cursor: pointer;
   width: 100%;
   height: 55px;
-  margin-top: 12px; /* Añadimos margen superior */
+  margin-top: 12px;
+  /* Añadimos margen superior */
 }
 
 .md-save-button:hover {
@@ -443,7 +484,8 @@ ion-modal ion-card {
   --background: #312f2f;
   box-shadow: none;
 }
-ion-card-header{
+
+ion-card-header {
   background: #312f2f00 !important;
 }
 
@@ -474,4 +516,27 @@ ion-card-header{
 
 .death-checkbox-group ion-checkbox {
   --size: 24px;
+}
+
+.custom-modal {
+  --width: 90%;
+  --height: 80%;
+  --border-radius: 10px;
+  --margin-top: 20px;
+  --margin-bottom: 20px;
+  --margin-left: auto;
+  --margin-right: auto;
+  --max-width: 600px;
+  --max-height: 80%;
+}
+
+.selected-button {
+  background: var(--ion-color-gradient-primary);
+  color: var(--ion-color-gradient-primary-contrast);
+  border: none;
+}
+
+.selected-button:hover {
+  background: var(--ion-color-gradient-primary);
+  opacity: 0.8;
 }

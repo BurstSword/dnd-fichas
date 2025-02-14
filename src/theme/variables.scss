@@ -1,19 +1,23 @@
 :root {
-    --ion-color-gradient-primary: linear-gradient(135deg, #6f45e2d2, #88d3ced3);
+    --ion-color-gradient-primary: linear-gradient(135deg, #6f45e2d2, #a888d3d3);
     --ion-color-gradient-primary-rgb: 111, 69, 226;
-    /* RGB aproximado del primer color */
     --ion-color-gradient-primary-contrast: #ffffff;
-    /* Color de contraste para el texto */
     --ion-color-gradient-primary-contrast-rgb: 255, 255, 255;
     --ion-color-gradient-primary-shade: #5e3dbf;
-    /* Tonalidad más oscura */
     --ion-color-gradient-primary-tint: #7c55e6;
-    /* Tonalidad más clara */
+
+    --ion-color-blueish: #6dc2df;
+	--ion-color-blueish-rgb: 109,194,223;
+	--ion-color-blueish-contrast: #000000;
+	--ion-color-blueish-contrast-rgb: 0,0,0;
+	--ion-color-blueish-shade: #60abc4;
+	--ion-color-blueish-tint: #7cc8e2;
+
 }
 
 $colors: (
     gradient-primary: (base: var(--ion-color-gradient-primary),
         contrast: var(--ion-color-gradient-primary-contrast),
         shade: var(--ion-color-gradient-primary-shade),
-        tint: var(--ion-color-gradient-primary-tint))
+        tint: var(--ion-color-gradient-primary-tint)),
 );

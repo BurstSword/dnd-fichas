@@ -283,11 +283,16 @@ export class CharacterFormPage implements OnInit {
   }
 
   filterSpells() {
-    this.filteredSpells = this.spells.filter(
-      (spell) =>
-        (!this.selectedLevel || spell.level === +this.selectedLevel) &&
-        spell.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    // Obtener el menor nivel de hechizo conocido por el personaje
+    const knownSpellLevels = this.character.spellcasting?.spellsKnown?.map(spell => spell.level) || [];
+    const minKnownSpellLevel = knownSpellLevels.length > 0 ? Math.min(...knownSpellLevels) : 0;
+  
+    this.filteredSpells = this.spells.filter(spell => {
+      const matchesSearchTerm = spell.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesClass = this.selectedClass ? spell.classes.includes(this.selectedClass) : true;
+      const matchesLevel = spell.level >= minKnownSpellLevel;
+      return matchesSearchTerm && matchesClass && matchesLevel;
+    });
   }
 
   getSpells(): Spell[] {

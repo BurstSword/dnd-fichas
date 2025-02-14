@@ -44,7 +44,7 @@ export class CharacterViewPage implements OnInit {
     { key: 'survival', name: 'Superv.', attribute: 'WIS' },
     { key: 'deception', name: 'Engaño', attribute: 'CHA' },
     { key: 'intimidation', name: 'Intimidación', attribute: 'CHA' },
-    { key: 'performance', name: 'Interpretación', attribute: 'CHA' },
+    { key: 'performance', name: 'Interpre.', attribute: 'CHA' },
     { key: 'persuasion', name: 'Persuasión', attribute: 'CHA' },
   ];
 
@@ -65,6 +65,11 @@ export class CharacterViewPage implements OnInit {
   savingThrowsExpanded = false; // Controla si la sección de tiradas de salvación está expandida
   deathSavesExpanded = false; // Controla si la sección de tiradas de salvación está expandida
   equipmentExpanded = false; // Controla si la sección de equipo está expandida
+
+  // Variables para el modal de hechizos
+  isSpellModalOpen: boolean = false;
+  selectedSpell: Spell | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private dataService: DataService,
@@ -86,11 +91,12 @@ export class CharacterViewPage implements OnInit {
                 this.character!.spellcasting!.spellSlots[level] = { max: 0, remaining: 0 };
               }
             });
-          }
 
-          if (this.character?.spellcasting?.spellsKnown) {
-            this.allSpells = this.character.spellcasting.spellsKnown;
-            this.filteredSpells = [...this.allSpells];
+            // Inicializa los hechizos conocidos
+            this.filteredSpells = this.character.spellcasting.spellsKnown;
+            // Filtra automáticamente al de menor nivel del personaje
+            const minLevel = Math.min(...this.filteredSpells.map((spell) => spell.level));
+            this.filterSpellsByLevel(minLevel);
           }
 
           if (this.character.deathSaves) {
@@ -98,8 +104,10 @@ export class CharacterViewPage implements OnInit {
           }
         }
       });
-
     }
+
+    //Filtrar por el nivel de hechizo menor que tenga el personaje, puede que no sean de nivel 0 y sean de otro nivel
+
   }
 
   openOptions(event: MouseEvent) {
@@ -403,14 +411,27 @@ export class CharacterViewPage implements OnInit {
     }
   }
 
-  filterSpellsByLevel(): void {
-    if (this.selectedSpellLevel === '') {
-      this.filteredSpells = [...this.allSpells]; // Si no hay filtro, muestra todos
+  filterSpellsByLevel(level: number | ''): void {
+    if (this.selectedSpellLevel === level) {
+      // Si el nivel ya está seleccionado, lo deselecciona y muestra todos
+      this.selectedSpellLevel = '';
+      this.filteredSpells = [...this.character.spellcasting.spellsKnown];
     } else {
-      this.filteredSpells = this.allSpells.filter(
-        (spell) => spell.level === this.selectedSpellLevel
+      // Filtra por el nivel seleccionado
+      this.selectedSpellLevel = level;
+      this.filteredSpells = this.character.spellcasting.spellsKnown.filter(
+        (spell) => spell.level === level
       );
     }
+  }
+
+  /**
+ * Verifica si hay hechizos en un nivel específico.
+ * @param level Nivel de hechizo.
+ * @returns True si hay hechizos en ese nivel, False si no.
+ */
+  hasSpellsAtLevel(level: number): boolean {
+    return this.character.spellcasting.spellsKnown.some((spell) => spell.level === level);
   }
 
   exportCharacter(): void {
@@ -443,32 +464,43 @@ export class CharacterViewPage implements OnInit {
  * Si seleccionas un slot, se rellenan todos los anteriores.
  * Si desmarcas un slot, se desmarcan ese y los posteriores.
  */
-toggleSpellSlot(level: number, selectedSlot: number): void {
-  const spellSlots = this.character.spellcasting.spellSlots[level];
+  toggleSpellSlot(level: number, selectedSlot: number): void {
+    const spellSlots = this.character.spellcasting.spellSlots[level];
 
-  if (!spellSlots) return;
+    if (!spellSlots) return;
 
-  if (spellSlots.remaining >= selectedSlot) {
-    // Desmarcar: Eliminar los puntos desde el seleccionado hacia adelante
-    spellSlots.remaining = selectedSlot - 1;
-  } else {
-    // Marcar: Rellenar hasta el slot seleccionado
-    spellSlots.remaining = selectedSlot;
+    if (spellSlots.remaining >= selectedSlot) {
+      // Desmarcar: Eliminar los puntos desde el seleccionado hacia adelante
+      spellSlots.remaining = selectedSlot - 1;
+    } else {
+      // Marcar: Rellenar hasta el slot seleccionado
+      spellSlots.remaining = selectedSlot;
+    }
+
+    // Guardar cambios en la base de datos
+    this.dataService.updateCharacterById(this.character.id, {
+      spellcasting: this.character.spellcasting,
+    });
   }
 
-  // Guardar cambios en la base de datos
-  this.dataService.updateCharacterById(this.character.id, {
-    spellcasting: this.character.spellcasting,
-  });
-}
+  /**
+   * Devuelve un array de números del 1 al máximo de slots disponibles.
+   */
+  getMaxSlots(level: number): number[] {
+    const max = this.character.spellcasting.spellSlots[level]?.max || 0;
+    return Array.from({ length: max }, (_, i) => i + 1);
+  }
 
-/**
- * Devuelve un array de números del 1 al máximo de slots disponibles.
- */
-getMaxSlots(level: number): number[] {
-  const max = this.character.spellcasting.spellSlots[level]?.max || 0;
-  return Array.from({ length: max }, (_, i) => i + 1);
-}
+  openSpellModal(spell: Spell) {
+    this.selectedSpell = spell;
+    this.isSpellModalOpen = true;
+  }
+
+  // Método para cerrar el modal de hechizos
+  closeSpellModal() {
+    this.selectedSpell = null;
+    this.isSpellModalOpen = false;
+  }
 
 
 }
