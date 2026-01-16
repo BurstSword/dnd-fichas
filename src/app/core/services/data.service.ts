@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { Character, Spell } from 'src/interfaces/character';
-import { CombatEntity } from 'src/interfaces/combat.entity';
-import { Observable, Subscription } from 'rxjs';
+import { AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { Observable, Subscription, firstValueFrom, shareReplay } from 'rxjs';
+import { Character, Spell } from 'src/app/shared/models/character.model';
+import { CombatEntity } from 'src/app/shared/models/combat-entity.model';
+import { FirestoreService } from './firestore.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +14,23 @@ export class DataService implements OnDestroy {
   private spellsCollection: AngularFirestoreCollection<Spell>;
   private characterSubscription!: Subscription;
 
-  constructor(private firestore: AngularFirestore) {
-    this.characterCollection = firestore.collection('characters');
-    this.combatCollection = firestore.collection('combat');
-    this.spellsCollection = this.firestore.collection<Spell>('spells');
+  private readonly characters$: Observable<Character[]>;
+  private readonly combatEntities$: Observable<CombatEntity[]>;
+  private readonly spells$: Observable<Spell[]>;
+
+  constructor(private firestoreService: FirestoreService) {
+    this.characterCollection = this.firestoreService.collection<Character>('characters');
+    this.combatCollection = this.firestoreService.collection<CombatEntity>('combat');
+    this.spellsCollection = this.firestoreService.collection<Spell>('spells');
+    this.characters$ = this.characterCollection
+      .valueChanges({ idField: 'id' })
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    this.combatEntities$ = this.combatCollection
+      .valueChanges({ idField: 'id' })
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    this.spells$ = this.spellsCollection
+      .valueChanges({ idField: 'id' })
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
     this.syncCharactersWithCombat();
   }
 
@@ -25,11 +39,11 @@ export class DataService implements OnDestroy {
   // ------------------------------------------
 
   getCharacters(): Observable<Character[]> {
-    return this.characterCollection.valueChanges({ idField: 'id' }) as Observable<Character[]>;
+    return this.characters$;
   }
 
   getAvailableCharacters(): Observable<Character[]> {
-    return this.firestore
+    return this.firestoreService
       .collection<Character>('characters', ref => ref.where('isInCombat', '==', false))
       .valueChanges({ idField: 'id' });
   }
@@ -65,7 +79,7 @@ export class DataService implements OnDestroy {
   // ------------------------------------------
 
   getCombatEntities(): Observable<CombatEntity[]> {
-    return this.combatCollection.valueChanges({ idField: 'id' });
+    return this.combatEntities$;
   }
 
   async addCombatEntity(entity: CombatEntity): Promise<void> {
@@ -90,7 +104,7 @@ export class DataService implements OnDestroy {
   async deleteCombatEntity(entity: CombatEntity): Promise<void> {
     console.log('Eliminando entidad del combate:', entity.id);
     try {
-      const combatDoc = await this.combatCollection.doc(entity.id).get().toPromise();
+      const combatDoc = await firstValueFrom(this.combatCollection.doc(entity.id).get());
       if (combatDoc?.exists) {
         const entity = combatDoc.data() as CombatEntity;
   
@@ -112,7 +126,7 @@ export class DataService implements OnDestroy {
   // ------------------------------------------
 
   private syncCharactersWithCombat(): void {
-    this.characterSubscription = this.characterCollection.valueChanges({ idField: 'id' })
+    this.characterSubscription = this.characters$
       .subscribe(characters => {
         characters.forEach(async (character) => {
           const combatDoc = await this.combatCollection.ref.where('id', '==', character.id).get();
@@ -139,7 +153,7 @@ export class DataService implements OnDestroy {
    * Obtener todos los hechizos.
    */
   getSpells(): Observable<Spell[]> {
-    return this.spellsCollection.valueChanges({ idField: 'id' });
+    return this.spells$;
   }
 
   /**
@@ -151,7 +165,7 @@ export class DataService implements OnDestroy {
   }
 
   async addSpells(spells: Spell[]): Promise<void> {
-    const batch = this.firestore.firestore.batch();
+    const batch = this.firestoreService.getBatch();
     spells.forEach(spell => {
       const newSpellRef = this.spellsCollection.ref.doc();
       batch.set(newSpellRef, spell);

@@ -44,7 +44,7 @@
 <ion-content id="main-content">
   <!-- Lista de personajes -->
   <ion-list class="custom-list">
-    <ion-card class="character-card" *ngFor="let character of characters; let i = index" (click)="viewCharacter(i)">
+    <ion-card class="character-card" *ngFor="let character of characters; let i = index; trackBy: trackByCharacterId" (click)="viewCharacter(i)">
       <ion-card-content>
 
 

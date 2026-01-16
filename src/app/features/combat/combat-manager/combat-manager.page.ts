@@ -1,26 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { DataService } from 'src/services/data.service';
-import { Subscription, combineLatest } from 'rxjs';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { combineLatest } from 'rxjs';
 import { AlertController } from '@ionic/angular';
-import { Character } from 'src/interfaces/character';
-
-interface CombatEntity {
-  id: string;
-  name: string;
-  type: 'character' | 'monster';
-  maxHP: number;
-  currentHP: number;
-  initiative: number;
-  characterId?: string;
-  armorClass?: number;
-}
+import { DataService } from 'src/app/core/services/data.service';
+import { Character } from 'src/app/shared/models/character.model';
+import { CombatEntity } from 'src/app/shared/models/combat-entity.model';
 
 @Component({
   selector: 'app-combat-manager',
   templateUrl: './combat-manager.page.html',
   styleUrls: ['./combat-manager.page.scss'],
 })
-export class CombatManagerPage implements OnInit, OnDestroy {
+export class CombatManagerPage implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
 
   newMonster: Partial<CombatEntity & { quantity: number }> = {
     name: '',
@@ -33,21 +25,20 @@ export class CombatManagerPage implements OnInit, OnDestroy {
 
 
   combatEntities: CombatEntity[] = [];
-  availableCharacters: any[] = [];
-  private subscriptions: Subscription[] = [];
+  availableCharacters: Character[] = [];
 
   constructor(private dataService: DataService, private alertCtrl: AlertController) { }
 
   ngOnInit() {
-    this.subscriptions.push(
-      combineLatest([
-        this.dataService.getCombatEntities(),
-        this.dataService.getAvailableCharacters(),
-      ]).subscribe(([combatEntities, availableCharacters]) => {
+    combineLatest([
+      this.dataService.getCombatEntities(),
+      this.dataService.getAvailableCharacters(),
+    ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([combatEntities, availableCharacters]) => {
         this.combatEntities = combatEntities.sort((a, b) => b.initiative - a.initiative);
         this.availableCharacters = availableCharacters;
-      })
-    );
+      });
   }
 
   /**
@@ -223,7 +214,11 @@ export class CombatManagerPage implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+  trackByEntityId(index: number, entity: CombatEntity): string {
+    return entity.id ?? `${index}`;
+  }
+
+  trackByCharacterId(index: number, character: Character): string {
+    return character.id ?? `${index}`;
   }
 }

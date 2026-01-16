@@ -18,7 +18,7 @@
       <ion-card-title>Personajes Disponibles</ion-card-title>
     </ion-card-header>
     <ion-list>
-      <ion-card *ngFor="let character of availableCharacters" class="combat-entity">
+      <ion-card *ngFor="let character of availableCharacters; trackBy: trackByCharacterId" class="combat-entity">
         <ion-row class="entity-header">
           <!-- Nombre de la Entidad -->
           <ion-col size="8">
@@ -55,11 +55,11 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-card *ngFor="let entity of combatEntities" class="combat-entity">
+        <ion-card *ngFor="let entity of combatEntities; trackBy: trackByEntityId" class="combat-entity">
           <ion-toolbar>
             <ion-title>{{entity.name}}</ion-title>
             <ion-buttons slot="end">
-              <ion-button fill="clear" color="danger" (click)="confirmRemoveEntity(entity)">
+              <ion-button fill="clear" color="danger" (click)="confirmRemoveEntity(entity)" aria-label="Eliminar entidad">
                 <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </ion-buttons>
@@ -110,7 +110,7 @@
               <ion-row class="entity-row">
                 <!-- Botón Restar HP (Solo Monstruos) -->
                 <ion-col size="2" *ngIf="entity.type === 'monster'" class="entity-controls">
-                  <ion-button fill="clear" size="small" (click)="adjustHP(entity, -1)">
+                  <ion-button fill="clear" size="small" (click)="adjustHP(entity, -1)" aria-label="Reducir vida">
                     <ion-icon name="remove-circle-outline"></ion-icon>
                   </ion-button>
                 </ion-col>
@@ -136,7 +136,7 @@
         
                 <!-- Botón Sumar HP (Solo Monstruos) -->
                 <ion-col size="2" *ngIf="entity.type === 'monster'" class="entity-controls">
-                  <ion-button fill="clear" size="small" (click)="adjustHP(entity, 1)">
+                  <ion-button fill="clear" size="small" (click)="adjustHP(entity, 1)" aria-label="Aumentar vida">
                     <ion-icon name="add-circle-outline"></ion-icon>
                   </ion-button>
                 </ion-col>

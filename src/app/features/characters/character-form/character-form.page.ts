@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Character, Spell, Weapon } from 'src/interfaces/character';
-import { spellsLibrary } from 'src/interfaces/spells-list';
-import { DataService } from 'src/services/data.service';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { DataService } from 'src/app/core/services/data.service';
+import { spellsLibrary } from 'src/app/shared/data/spells-library';
+import { Character, Spell, Weapon } from 'src/app/shared/models/character.model';
 
 
 @Component({
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./character-form.page.scss'],
 })
 export class CharacterFormPage implements OnInit {
-  private spellsSubscription!: Subscription;
+  private readonly destroyRef = inject(DestroyRef);
   spells: Spell[] = [];
   // Inicializamos un personaje usando la interfaz Character
   character: Character = {
@@ -208,16 +208,22 @@ export class CharacterFormPage implements OnInit {
   ngOnInit() {
     const characterId = this.route.snapshot.paramMap.get('id');
     if (characterId) {
-      this.dataService.getCharacterById(characterId).subscribe((character) => {
+      this.dataService
+        .getCharacterById(characterId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((character) => {
         if (character) {
           this.character = { ...character }; // Carga los datos del personaje
         }
       });
     }
     
-    this.spellsSubscription = this.dataService.getSpells().subscribe((spells) => {
-      this.spells = spells.sort((a, b) => a.level - b.level);
-    });
+    this.dataService
+      .getSpells()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((spells) => {
+        this.spells = spells.sort((a, b) => a.level - b.level);
+      });
 
     this.calculateModifiers(); // Calculamos modificadores iniciales
     this.updateInitiative();
@@ -507,4 +513,3 @@ export class CharacterFormPage implements OnInit {
 function readFileSync(arg0: string, arg1: string): string {
   throw new Error('Function not implemented.');
 }
-
