@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataService } from '../../services/data.service';
-import { Character, Spell } from 'src/interfaces/character';
 import { AlertController } from '@ionic/angular';
+import { DataService } from 'src/app/core/services/data.service';
+import { Character, Spell } from 'src/app/shared/models/character.model';
+import { ensureSpellSlots } from 'src/app/shared/utils/character.utils';
 
 @Component({
   selector: 'app-character-view',
@@ -10,6 +12,7 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./character-view.page.scss'],
 })
 export class CharacterViewPage implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   character: Character | null = null; // Inicializar como null
   selectedSpellLevel: number | '' = ''; // Nivel seleccionado para el filtro
   allSpells: Spell[] = []; // Lista completa de hechizos
@@ -75,18 +78,12 @@ export class CharacterViewPage implements OnInit {
   ngOnInit() {
     const characterId = this.route.snapshot.paramMap.get('id');
     if (characterId) {
-      this.dataService.getCharacterById(characterId).subscribe((character) => {
+      this.dataService
+        .getCharacterById(characterId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((character) => {
         if (character) {
-          this.character = { ...character };
-
-          // Inicializa los spell slots
-          if (this.character.spellcasting?.spellSlots) {
-            this.spellLevels.forEach((level) => {
-              if (!this.character?.spellcasting.spellSlots[level]) {
-                this.character!.spellcasting!.spellSlots[level] = { max: 0, remaining: 0 };
-              }
-            });
-          }
+          this.character = ensureSpellSlots({ ...character }, this.spellLevels);
 
           if (this.character?.spellcasting?.spellsKnown) {
             this.allSpells = this.character.spellcasting.spellsKnown;

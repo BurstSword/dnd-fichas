@@ -1,38 +1,33 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { DataService } from '../../services/data.service';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { Subscription } from 'rxjs';
+import { DataService } from 'src/app/core/services/data.service';
+import { Character } from 'src/app/shared/models/character.model';
 
 @Component({
   selector: 'app-character-list',
   templateUrl: './character-list.page.html',
   styleUrls: ['./character-list.page.scss'],
 })
-export class CharacterListPage implements OnInit, OnDestroy {
-  characters: any[] = [];
+export class CharacterListPage implements OnInit {
+  characters: Character[] = [];
   isAddCharacterMenuOpen = false; // Controla si el menú está abierto
-  popoverEvent: any; // Evento para posicionar el popover
+  popoverEvent?: Event; // Evento para posicionar el popover
   isOptionsOpen = false; // Controla si el popover de opciones está abierto
 
-  private charactersSubscription!: Subscription;
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(private dataService: DataService, private router: Router) {}
 
   ngOnInit() {
     // 🔄 Suscripción en tiempo real
-    this.charactersSubscription = this.dataService
+    this.dataService
       .getCharacters()
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((characters) => {
         this.characters = characters;
       });
-  }
-
-  ngOnDestroy() {
-    // 🚫 Evita fugas de memoria
-    if (this.charactersSubscription) {
-      this.charactersSubscription.unsubscribe();
-    }
   }
 
   openAddCharacterMenu(event: Event): void {
@@ -78,6 +73,10 @@ export class CharacterListPage implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error al cambiar la imagen', error);
     }
+  }
+
+  trackByCharacterId(index: number, character: Character): string {
+    return character.id ?? `${index}`;
   }
 
   importCharacter(): void {

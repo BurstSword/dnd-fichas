@@ -1,4 +1,4 @@
-import { Spell } from "./character";
+import { Spell } from '../models/character.model';
 
 export const spellsLibrary: Record<number, Spell[]> = {
   0: [
