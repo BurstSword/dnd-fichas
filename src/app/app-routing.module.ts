@@ -9,23 +9,36 @@ const routes: Routes = [
   },
   {
     path: 'character-list',
-    loadChildren: () => import('./character-list/character-list.module').then(m => m.CharacterListPageModule)
+    loadChildren: () =>
+      import('./features/characters/character-list/character-list.module').then(
+        m => m.CharacterListPageModule
+      )
   },
   {
     path: 'character-form',
-    loadChildren: () => import('./character-form/character-form.module').then(m => m.CharacterFormPageModule)
+    loadChildren: () =>
+      import('./features/characters/character-form/character-form.module').then(
+        m => m.CharacterFormPageModule
+      )
   },
   {
     path: 'character-view',
-    loadChildren: () => import('./character-view/character-view.module').then( m => m.CharacterViewPageModule)
+    loadChildren: () =>
+      import('./features/characters/character-view/character-view.module').then(
+        m => m.CharacterViewPageModule
+      )
   },
   {
     path: 'dices',
-    loadChildren: () => import('./dices/dices.module').then( m => m.DicesPageModule)
+    loadChildren: () =>
+      import('./features/dices/dices/dices.module').then(m => m.DicesPageModule)
   },
   {
     path: 'combat-manager',
-    loadChildren: () => import('./combat-manager/combat-manager.module').then( m => m.CombatManagerPageModule)
+    loadChildren: () =>
+      import('./features/combat/combat-manager/combat-manager.module').then(
+        m => m.CombatManagerPageModule
+      )
   }
 ];
 

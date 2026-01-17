@@ -1,0 +1,63 @@
+<ion-menu side="start" contentId="main-content" menuId="characterMenu">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Opciones</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <!-- Opción Importar JSON -->
+      <ion-item button (click)="importCharacter()">
+        <ion-icon name="download-outline" slot="start"></ion-icon>
+        Importar JSON
+      </ion-item>
+      <!-- Opción Crear Personaje -->
+      <ion-item button (click)="goToCreator()">
+        <ion-icon name="create-outline" slot="start"></ion-icon>
+        Crear Personaje
+      </ion-item>
+      <!-- Opción Lanzar Dados -->
+      <ion-item button (click)="goToDiceRollers()">
+        <ion-icon name="dice-outline" slot="start"></ion-icon>
+        Lanzar Dados
+      </ion-item>
+      <!-- Opción combate -->
+      <ion-item button (click)="goToCombat()">
+        <ion-icon name="skull-outline" slot="start"></ion-icon>
+        Combate
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-header [translucent]="true">
+  <ion-toolbar >
+    <ion-buttons slot="start">
+      <!-- Botón para abrir el menú lateral -->
+      <ion-menu-button menu="characterMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Fichas de Personajes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content id="main-content">
+  <!-- Lista de personajes -->
+  <ion-list class="custom-list">
+    <ion-card class="character-card" *ngFor="let character of characters; let i = index; trackBy: trackByCharacterId" (click)="viewCharacter(i)">
+      <ion-card-content>
+
+
+        <ion-label>
+          <h2>{{ character.name }}</h2>
+        </ion-label>
+        <p><strong>Class:</strong> {{ character.class || 'Ninguna' }}</p>
+        <p><strong>Level:</strong> {{ character.level || 1 }}</p>
+        <p><strong>Archetype:</strong> {{ character.archetype || 'Ninguno' }}</p>
+        <p><strong>Proficiency</strong> {{ character.proficiency || 0 }}</p>
+
+      </ion-card-content>
+    </ion-card>
+
+  </ion-list>
+</ion-content>
